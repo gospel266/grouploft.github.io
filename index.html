@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Loft | Consultoría Enterprise</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #deff9a; /* Verde Lima Corporativo Group Loft */
+            --bg-deep: #05070a;
+            --bg-card: #0f172a;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --border: rgba(222, 255, 154, 0.15);
+            --glow: rgba(222, 255, 154, 0.35);
+        }
+
+        /* CONFIGURACIÓN BASE Y SCROLL FLUIDO */
+        * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+        body {
+            font-family: 'Urbanist', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* BLOBS DE FONDO DECORATIVOS */
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(222, 255, 154, 0.04) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .glow-1 { top: -200px; right: -100px; }
+        .glow-2 { bottom: -200px; left: -100px; }
+
+        /* ANIMACIÓN AL BAJAR EL SCROLL (REVEAL) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 25px 60px;
+            background: rgba(5, 7, 10, 0.95); backdrop-filter: blur(20px);
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border); z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        .logo { font-size: 34px; font-weight: 700; letter-spacing: -2px; }
+        .logo span { color: var(--primary); }
+        .nav-links { display: flex; align-items: center; }
+        .nav-links a { color: var(--text-dim); text-decoration: none; margin-left: 30px; font-weight: 600; font-size: 15px; text-transform: uppercase; transition: 0.3s; }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* FORMATO DE SECCIONES GENERALES */
+        section.full-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 120px 40px;
+            position: relative;
+            z-index: 1;
+        }
+        .container { max-width: 1300px; width: 100%; margin: 0 auto; }
+
+        /* SECCIÓN HERO (PORTADA DE BIENVENIDA) */
+        .hero { text-align: center; }
+        .hero h1 { font-size: clamp(45px, 7vw, 95px); font-weight: 700; line-height: 1.1; margin-bottom: 25px; letter-spacing: -3px; }
+        .hero h1 span { color: var(--primary); }
+        .hero p { font-size: clamp(18px, 2.5vw, 26px); color: var(--text-dim); max-width: 900px; margin: 0 auto 50px auto; font-weight: 300; }
+        
+        .btn-main { background: var(--primary); color: #000; padding: 22px 55px; border-radius: 60px; text-decoration: none; font-weight: 700; font-size: 20px; transition: 0.4s; border: none; cursor: pointer; display: inline-block; }
+        .btn-main:hover { transform: translateY(-5px); box-shadow: 0 20px 40px var(--glow); }
+
+        .about-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 30px; 
+            margin-top: 50px; 
+            width: 100%;
+        }
+        .about-box { 
+            background: var(--bg-card); 
+            padding: 45px 35px; 
+            border-radius: 35px; 
+            border: 1px solid var(--border); 
+            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .about-box:hover { border-color: var(--primary); transform: translateY(-8px); box-shadow: 0 10px 30px rgba(222, 255, 154, 0.05); }
+        .about-box i { font-size: 45px; color: var(--primary); margin-bottom: 25px; display: block; }
+        .about-box h3 { font-size: 26px; margin-bottom: 18px; color: #fff; font-weight: 700; }
+        .about-box p { font-size: 18px; color: var(--text-dim); text-align: justify; line-height: 1.7; }
+
+        /* SECCIÓN GESTIÓN DE ENTIDADES */
+        .org-card { background: var(--bg-card); border-radius: 40px; padding: 60px; margin-bottom: 45px; border: 1px solid var(--border); display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 60px; align-items: center; width: 100%; }
+        .org-card h2 { font-size: 44px; color: var(--primary); margin-bottom: 20px; }
+        .org-card p { font-size: 21px; color: var(--text-dim); line-height: 1.8; }
+        .btn-ext { color: var(--primary); text-decoration: none; font-weight: 700; border: 1px solid var(--primary); padding: 15px 30px; border-radius: 12px; margin-top: 30px; display: inline-flex; align-items: center; gap: 10px; font-size: 18px; transition: 0.3s; }
+        .btn-ext:hover { background: var(--primary); color: #000; }
+
+        .sim-container {
+            display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 40px;
+            background: var(--bg-card); border-radius: 40px; padding: 50px; border: 1px solid var(--border);
+            width: 100%;
+        }
+        .input-group { margin-bottom: 25px; }
+        .input-group label { display: block; margin-bottom: 12px; font-size: 14px; font-weight: 600; text-transform: uppercase; color: var(--text-dim); }
+        .input-group input { width: 100%; padding: 20px; background: var(--bg-deep); border: 1px solid #1e293b; border-radius: 15px; color: #fff; font-size: 22px; outline: none; transition: 0.3s; }
+        .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(222, 255, 154, 0.1); }
+
+        /* BARRA DE PROGRESO ANIMADA */
+        .progress-wrapper {
+            width: 100%;
+            background-color: var(--bg-deep);
+            height: 25px;
+            border-radius: 50px;
+            margin-top: 30px;
+            overflow: hidden;
+            display: none; /* Controlado mediante JS */
+            border: 1px solid var(--border);
+        }
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #84cc16);
+            transition: width 0.1s linear;
+        }
+        
+        /* DASHBOARD DEL REPORTE */
+        .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .stat-card { background: rgba(5,7,10,0.6); padding: 24px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
+        .stat-card span { font-size: 12px; color: var(--text-dim); display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-card h4 { font-size: 26px; color: var(--primary); font-weight: 700; }
+
+        .total-highlight { background: var(--primary); color: #000; padding: 25px; border-radius: 25px; margin-top: 25px; text-align: center; }
+        .total-highlight p { font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: #000; }
+        .total-highlight h2 { font-size: 48px; font-weight: 800; }
+
+        .log-console {
+            background: #000; border-radius: 20px; padding: 25px; font-family: monospace; height: 160px; overflow-y: auto; border: 1px solid #1e293b; margin-top: 20px; color: #84cc16; font-size: 14px; line-height: 1.5;
+        }
+        .log-line { margin-bottom: 6px; border-left: 2px solid var(--primary); padding-left: 12px; }
+
+        /* SECCIÓN MARCO LEGAL */
+        .legal-box { background: var(--bg-card); padding: 70px; border-radius: 40px; border-left: 12px solid var(--primary); display: grid; grid-template-columns: 1fr 1fr; gap: 60px; width: 100%; }
+        .legal-box h2 { font-size: 48px; color: var(--primary); margin-bottom: 30px; }
+        .legal-box p { font-size: 22px; line-height: 1.8; color: var(--text-dim); }
+        .legal-list { list-style: none; margin-top: 20px; }
+        .legal-list li { font-size: 20px; margin-bottom: 25px; display: flex; align-items: flex-start; gap: 15px; color: var(--text-dim); }
+        .legal-list i { color: var(--primary); margin-top: 6px; font-size: 22px; }
+        .legal-list strong { color: #fff; display: block; margin-bottom: 5px; }
+
+        .success-section {
+            background: radial-gradient(circle at center, rgba(222, 255, 154, 0.05) 0%, transparent 80%);
+            padding-bottom: 120px;
+        }
+        .success-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, #090d16 100%);
+            border: 2px solid var(--primary);
+            border-radius: 45px;
+            padding: 70px 60px;
+            width: 100%;
+            box-shadow: 0 25px 50px -12px rgba(222, 255, 154, 0.15);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .success-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, var(--primary), #84cc16);
+        }
+        .success-icon {
+            font-size: 70px;
+            color: var(--primary);
+            margin-bottom: 30px;
+            animation: pulse-glow 2s infinite alternate;
+        }
+        .success-card h2 {
+            font-size: clamp(35px, 5vw, 60px);
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+        .success-card h2 span { color: var(--primary); }
+        .success-card .success-subtitle {
+            font-size: 22px;
+            color: var(--text-main);
+            max-width: 850px;
+            margin: 0 auto 50px auto;
+            font-weight: 300;
+        }
+        
+        .documents-wrapper {
+            background: rgba(5, 7, 10, 0.6);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 30px;
+            padding: 40px;
+            margin-bottom: 50px;
+            text-align: left;
+        }
+        .documents-wrapper h4 {
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+        .documents-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            list-style: none;
+        }
+        .doc-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        .doc-item i {
+            font-size: 28px;
+            color: var(--primary);
+            margin-top: 4px;
+        }
+        .doc-item div strong {
+            display: block;
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+        .doc-item div span {
+            font-size: 16px;
+            color: var(--text-dim);
+            line-height: 1.5;
+            display: block;
+        }
+
+        .thank-you-note {
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .thank-you-note p {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary);
+            line-height: 1.5;
+        }
+        .thank-you-note span {
+            display: block;
+            font-size: 16px;
+            color: var(--text-dim);
+            margin-top: 10px;
+            font-weight: 300;
+        }
+
+        /* PIE DE PÁGINA */
+        footer { text-align: center; padding: 100px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 20px; }
+
+        @media (max-width: 1024px) {
+            .about-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .success-card { padding: 50px 30px; }
+            .documents-list { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 15px 30px; flex-direction: column; gap: 15px; }
+            .nav-links { width: 100%; justify-content: center; }
+            .nav-links a { margin: 0 12px; font-size: 13px; }
+            section.full-page { padding: 100px 20px 60px 20px; }
+            
+            .hero h1 { font-size: 44px; }
+            .hero p { font-size: 18px; margin-bottom: 35px; }
+            .btn-main { padding: 18px 40px; font-size: 18px; }
+
+            .about-grid { grid-template-columns: 1fr; }
+            .about-box { padding: 35px 25px; }
+
+            .org-card { grid-template-columns: 1fr; gap: 30px; padding: 35px 25px; text-align: center; }
+            .org-card div { order: 1; }
+            .org-card div i { order: 2; font-size: 80px; }
+            .org-card h2 { font-size: 32px; }
+            .org-card p { font-size: 17px; }
+
+            .sim-container { grid-template-columns: 1fr; padding: 30px 20px; }
+            .report-grid { grid-template-columns: 1fr; }
+            .stat-card { padding: 20px; }
+            .total-highlight h2 { font-size: 34px; }
+
+            .legal-box { grid-template-columns: 1fr; padding: 40px 25px; gap: 45px; }
+            .legal-box h2 { font-size: 34px; }
+            .legal-box p { font-size: 18px; }
+            .legal-list li { font-size: 17px; }
+
+            .success-card { border-radius: 30px; }
+            .success-card h2 { font-size: 34px; }
+            .success-card .success-subtitle { font-size: 18px; margin-bottom: 35px; }
+            .doc-item div strong { font-size: 18px; }
+            .doc-item div span { font-size: 15px; }
+            .thank-you-note p { font-size: 19px; }
+        }
+
+        /* ANIMACIONES AUXILIARES */
+        @keyframes pulse-glow {
+            0% { transform: scale(1); filter: drop-shadow(0 0 5px var(--glow)); }
+            100% { transform: scale(1.05); filter: drop-shadow(0 0 20px var(--glow)); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BLOBS DE FONDO DECORATIVOS -->
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
+    <!-- NAVEGACIÓN CORPORATIVA -->
+    <nav>
+        <div class="logo">Group <span>Loft</span></div>
+        <div class="nav-links">
+            <a href="#about">Firma</a>
+            <a href="#org">Entidades</a>
+            <a href="#sim">Simulador IT</a>
+            <a href="#legal">Marco Legal</a>
+        </div>
+    </nav>
+
+    <!-- SECCIÓN HERO -->
+    <section class="full-page hero">
+        <div class="container">
+            <h1>Formalización <span>Empresarial</span></h1>
+            <p>Group Loft: El ecosistema tecnológico y legal de vanguardia que transforma negocios tradicionales en estructuras competitivas ante el Estado Dominicano.</p>
+            <a href="#about" class="btn-main">Conoce Nuestra Firma</a>
+        </div>
+    </section>
+
+    <section id="about" class="full-page" style="background: linear-gradient(180deg, var(--bg-deep), var(--bg-card));">
+        <div class="container reveal">
+            <h2 style="font-size: 55px; text-align: center; margin-bottom: 35px;">¿Quiénes Somos en <span style="color: var(--primary);">Group Loft</span>?</h2>
+            
+            <!-- BOTÓN DE AUDIO DE ALTA FIDELIDAD CON ACENTO LATINO -->
+            <div style="text-align: center; margin-bottom: 45px;">
+                <button onclick="controlarVoz()" id="btn-voz" class="btn-main" style="background: rgba(222, 255, 154, 0.1); color: var(--primary); border: 1px solid var(--primary); padding: 18px 45px; font-size: 19px;">
+                    <i class="fa-solid fa-microphone-lines"></i> <span id="txt-voz">Escuchar Presentación Virtual</span>
+                </button>
+            </div>
+
+            <div class="about-grid">
+                <div class="about-box">
+                    <i class="fa-solid fa-users-gear"></i>
+                    <h3>Nuestra Identidad</h3>
+                    <p id="t1">Somos una firma de consultores especializados en informática y procesos legales. Guiamos a nuevos emprendedores eliminando la burocracia tradicional mediante el uso de software de gestión avanzado.</p>
+                </div>
+                <div class="about-box">
+                    <i class="fa-solid fa-laptop-code"></i>
+                    <h3>¿Qué Hacemos?</h3>
+                    <p id="t2">Automatizamos el registro ante ONAPI, Cámaras de Comercio y DGII. Nos encargamos de la redacción de estatutos y la carga digital de archivos para una formalización rápida y segura.</p>
+                </div>
+                <div class="about-box">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                    <h3>¿Cómo Trabajamos?</h3>
+                    <p id="t3">Implementamos sistemas de información que calculan costos reales y cronogramas de entrega, asegurando que cada empresa cumpla con las leyes laborales y de ética informática vigentes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN DE ENTIDADES ESTATALES -->
+    <section id="org" class="full-page">
+        <div class="container">
+            <h2 style="font-size: 55px; text-align: center; margin-bottom: 60px;">Gestión de <span style="color: var(--primary);">Entidades</span></h2>
+            
+            <!-- 1. ONAPI -->
+            <div class="org-card reveal">
+                <div>
+                    <h2>01. ONAPI</h2>
+                    <p>La Oficina Nacional de la Propiedad Industrial otorga el uso exclusivo de tu Nombre Comercial. Es el primer paso crítico para proteger tu identidad marcaria e impedir que terceros dupliquen tu negocio a nivel nacional.</p>
+                    <a href="https://onapi.gob.do" target="_blank" class="btn-ext">Trámites ONAPI Virtual <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div style="font-size: 140px; text-align: center; opacity: 0.15;"><i class="fa-solid fa-copyright"></i></div>
+            </div>
+
+            <!-- 2. CÁMARA DE COMERCIO -->
+            <div class="org-card reveal" style="direction: rtl;">
+                <div style="direction: ltr;">
+                    <h2>02. Cámara de Comercio</h2>
+                    <p>Emite el Registro Mercantil, dotando de personalidad jurídica oficial a tu empresa. Este certificado es un requisito mandatorio para habilitar cuentas bancarias comerciales y firmar contratos formales con el sector corporativo.</p>
+                    <a href="https://www.camarasantodomingo.do" target="_blank" class="btn-ext">Registro Mercantil <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div style="font-size: 140px; text-align: center; opacity: 0.15;"><i class="fa-solid fa-building-shield"></i></div>
+            </div>
+
+            <!-- 3. DGII -->
+            <div class="org-card reveal">
+                <div>
+                    <h2>03. Dirección General de Impuestos (DGII)</h2>
+                    <p>Autoridad fiscal del Estado dominicano. Group Loft gestiona la asignación de tu Registro Nacional de Contribuyentes (RNC), el alta en la oficina virtual tributaria y el pago impositivo del 1% del capital social para la emisión de NCF.</p>
+                    <a href="https://dgii.gov.do" target="_blank" class="btn-ext">Oficina Virtual DGII <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div style="font-size: 140px; text-align: center; opacity: 0.15;"><i class="fa-solid fa-landmark"></i></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="sim" class="full-page">
+        <div class="container reveal">
+            <h2 style="font-size: 55px; text-align: center; margin-bottom: 40px;">Sistema de Información <span style="color: var(--primary);">Interactive v2.0</span></h2>
+            
+            <div class="sim-container">
+                <div class="inputs">
+                    <div class="input-group">
+                        <label>Nombre de la Empresa</label>
+                        <input type="text" id="inp-nombre" placeholder="Ej: Group Loft Inversiones">
+                    </div>
+                    <div class="input-group">
+                        <label>Capital Social Declarado (RD$)</label>
+                        <input type="number" id="inp-capital" placeholder="Ej: 100000">
+                    </div>
+                    <div class="input-group">
+                        <label>Cantidad de Socios</label>
+                        <input type="number" id="inp-socios" value="1">
+                    </div>
+                    <button onclick="ejecutarAnalisis()" class="btn-main" style="width: 100%;">Ejecutar Simulación IT</button>
+                    
+                    <!-- BARRA DE CARGA DINÁMICA -->
+                    <div class="progress-wrapper" id="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+
+                    <div class="log-console" id="console">
+                        <div class="log-line">> Consola Técnica Group Loft v2.0 Lista.</div>
+                        <div class="log-line">> Esperando parámetros de entrada para procesar...</div>
+                    </div>
+                </div>
+
+                <div class="outputs">
+                    <div class="report-grid">
+                        <div class="stat-card">
+                            <span>Tiempo Estimado</span>
+                            <h4 id="out-dias">-- Días</h4>
+                        </div>
+                        <div class="stat-card">
+                            <span>Impuesto DGII (1%)</span>
+                            <h4 id="out-dgii">RD$ 0</h4>
+                        </div>
+                        <div class="stat-card">
+                            <span>Tasa Cámara de Comercio</span>
+                            <h4 id="out-camara">RD$ 0</h4>
+                        </div>
+                        <div class="stat-card">
+                            <span>Acciones por Socio</span>
+                            <h4 id="out-acciones">RD$ 0</h4>
+                        </div>
+                        
+                        <!-- CASILLA EXCLUSIVA Y FIJA DE HONORARIOS DE ABOGADO -->
+                        <div class="stat-card" style="grid-column: span 2; border-color: rgba(222, 255, 154, 0.3); background-color: rgba(222, 255, 154, 0.02);">
+                            <span>Honorarios de Abogado (Fijo Group Loft)</span>
+                            <h4 style="color: #fff; font-size: 32px;">RD$ 27,000</h4>
+                        </div>
+                    </div>
+                    
+                    <div class="total-highlight">
+                        <p>Inversión Bruta Consolidada</p>
+                        <h2 id="out-total">RD$ 31,745</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN MARCO LEGAL -->
+    <section id="legal" class="full-page">
+        <div class="container reveal">
+            <div class="legal-box">
+                <div>
+                    <h2>Marco Legal del Estado</h2>
+                    <p>La constitución y desarrollo de los entes comerciales en la República Dominicana se rige por un estricto conjunto de leyes de orden público que garantizan la estabilidad del mercado, la transparencia corporativa y el cumplimiento ante el fisco.</p>
+                    
+                    <ul class="legal-list">
+                        <li>
+                            <i class="fa-solid fa-scale-balanced"></i>
+                            <div>
+                                <strong>Ley 479-08 (Sociedades Comerciales):</strong>
+                                <span>Establece los lineamientos de formación, capital social, responsabilidad jurídica y asambleas de las sociedades (S.R.L., EIRL, S.A.).</span>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-coins"></i>
+                            <div>
+                                <strong>Ley Tributaria (Ley 11-92):</strong>
+                                <span>Código Tributario de la República Dominicana que regula las obligaciones de los contribuyentes ante la DGII, la tasa del ITBIS y el Impuesto sobre la Renta.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h2 style="color: #fff;">Protección Social y Trabajo</h2>
+                    <p>Formalizar la estructura corporativa habilita la protección legal y los beneficios de seguridad social fundamentales para el desarrollo de la nómina de colaboradores.</p>
+                    
+                    <ul class="legal-list">
+                        <li>
+                            <i class="fa-solid fa-briefcase"></i>
+                            <div>
+                                <strong>Ley 16-92 (Código de Trabajo):</strong>
+                                <span>Rige las relaciones laborales del país. Garantiza los derechos irrenunciables de los trabajadores (vacaciones, regalías pascual, preaviso y cesantía).</span>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-user-doctor"></i>
+                            <div>
+                                <strong>Ley 87-01 (Seguridad Social):</strong>
+                                <span>Establece el marco obligatorio de afiliación en la TSS (Tesorería de la Seguridad Social) garantizando Seguro Familiar de Salud, Riesgos Laborales y AFP.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="success" class="full-page success-section">
+        <div class="container reveal">
+            <div class="success-card">
+                <div class="success-icon">
+                    <i class="fa-solid fa-medal"></i>
+                </div>
+                <h2>¡Felicidades, ya eres un <span>empresario</span>!</h2>
+                <p class="success-subtitle">Has tomado la decisión correcta para impulsar y dar robustez jurídica a tus metas. Con Group Loft a tu lado, la formalidad comercial es un proceso sin fricciones.</p>
+                
+                <div class="documents-wrapper">
+                    <h4>Documentos y Activos Oficiales Otorgados</h4>
+                    <div class="documents-list">
+                        <div class="doc-item">
+                            <i class="fa-solid fa-stamp"></i>
+                            <div>
+                                <strong>Certificado de ONAPI</strong>
+                                <span>Título oficial que otorga la exclusividad jurídica de tu Nombre Comercial a nivel nacional.</span>
+                            </div>
+                        </div>
+                        <div class="doc-item">
+                            <i class="fa-solid fa-file-contract"></i>
+                            <div>
+                                <strong>Estatutos Sociales Sellados</strong>
+                                <span>Redacción del marco regulador de tu empresa, debidamente registrado y timbrado por el Estado.</span>
+                            </div>
+                        </div>
+                        <div class="doc-item">
+                            <i class="fa-solid fa-id-card"></i>
+                            <div>
+                                <strong>Registro Mercantil</strong>
+                                <span>Emitido por la Cámara de Comercio correspondiente, dotándote de plena personalidad comercial.</span>
+                            </div>
+                        </div>
+                        <div class="doc-item">
+                            <i class="fa-solid fa-building-circle-check"></i>
+                            <div>
+                                <strong>Acta de Inscripción al RNC</strong>
+                                <span>Código tributario emitido por la DGII junto al alta operativa de tu Oficina Virtual.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="thank-you-note">
+                    <p>Muchas gracias por trabajar con nosotros y confiar en nuestro equipo.</p>
+                    <span>Group Loft | Ecosistema Tecnológico de Crecimiento Corporativo</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Group Loft | Consultoría Enterprise | Santo Domingo, República Dominicana</p>
+    </footer>
+
+    <script>
+        // 1. SÍNTESIS DE VOZ LATINOAMERICANA SÓLIDA (EVITA ACENTO DE ESPAÑA DE FORMA ACTIVA)
+        let hablando = false;
+        let sintesis = window.speechSynthesis;
+        let vocesDisponibles = [];
+
+        function cargarVoces() {
+            vocesDisponibles = sintesis.getVoices();
+        }
+
+        // Cargar voces en navegadores de forma asíncrona
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = cargarVoces;
+        }
+        cargarVoces();
+
+        function controlarVoz() {
+            const btn = document.getElementById('btn-voz');
+            const txt = document.getElementById('txt-voz');
+
+            if (!hablando) {
+                cargarVoces();
+
+                const msj = new SpeechSynthesisUtterance();
+                const textoCompleto = `Hola, soy la asistente virtual de Group Loft. Permíteme explicarte quiénes somos. ${document.getElementById('t1').innerText} ${document.getElementById('t2').innerText} ${document.getElementById('t3').innerText}`;
+                
+                // Filtrar activamente para priorizar acentos de América Latina y EVITAR estrictamente 'es-ES' (España)
+                let vozLatina = vocesDisponibles.find(v => 
+                    (v.lang.includes('es-MX') || 
+                     v.lang.includes('es-US') || 
+                     v.lang.includes('es-LA') || 
+                     v.lang.includes('es-CO') || 
+                     v.lang.includes('es-419')) && 
+                    !v.lang.includes('es-ES')
+                );
+                
+                // Fallback si no encuentra las anteriores: cualquier español que NO sea de España
+                if (!vozLatina) {
+                    vozLatina = vocesDisponibles.find(v => v.lang.startsWith('es') && !v.lang.includes('es-ES'));
+                }
+
+                msj.voice = vozLatina || vocesDisponibles.find(v => v.lang.startsWith('es')) || vocesDisponibles[0];
+                msj.text = textoCompleto;
+                msj.rate = 0.98;
+
+                msj.onstart = () => {
+                    hablando = true;
+                    btn.style.background = "#deff9a";
+                    btn.style.color = "#000";
+                    txt.innerText = "Detener Narración";
+                };
+
+                msj.onend = () => {
+                    hablando = false;
+                    btn.style.background = "rgba(222, 255, 154, 0.1)";
+                    btn.style.color = "#deff9a";
+                    txt.innerText = "Escuchar Presentación Virtual";
+                };
+
+                sintesis.speak(msj);
+            } else {
+                sintesis.cancel();
+                hablando = false;
+                btn.style.background = "rgba(222, 255, 154, 0.1)";
+                btn.style.color = "#deff9a";
+                txt.innerText = "Escuchar Presentación Virtual";
+            }
+        }
+
+        // 2. SIMULADOR CON PROGRESO GRADUAL (3 SEGUNDOS) Y LOGS TÉCNICOS
+        function ejecutarAnalisis() {
+            const capital = parseFloat(document.getElementById('inp-capital').value) || 0;
+            const socios = parseInt(document.getElementById('inp-socios').value) || 1;
+            const nombre = document.getElementById('inp-nombre').value || "EMPRESA";
+
+            const log = document.getElementById('console');
+            const pCont = document.getElementById('progress-container');
+            const pBar = document.getElementById('progress-bar');
+
+            // Resetear visualización
+            log.innerHTML = "";
+            pCont.style.display = "block";
+            pBar.style.width = "0%";
+
+            const eventos = [
+                { tiempo: 0, msj: "> Conectando con los servidores del API del Estado Dominicano..." },
+                { tiempo: 600, msj: "> Consultando base de datos de ONAPI para '" + nombre.toUpperCase() + "'..." },
+                { tiempo: 1200, msj: "> Liquidando Impuesto Tributario (1% s/ Capital Autorizado) ante la DGII..." },
+                { tiempo: 1800, msj: "> Computando tasas del Registro Mercantil ante la Cámara de Comercio..." },
+                { tiempo: 2400, msj: "> Inyectando honorarios corporativos fijos de Group Loft (RD$ 27,000)..." },
+                { tiempo: 3000, msj: "> Procesamiento completado. Generando resultados en el Dashboard..." }
+            ];
+
+            // Animar la barra de carga paulatinamente durante 3 segundos
+            let progreso = 0;
+            const intervaloProgreso = setInterval(() => {
+                progreso += 2;
+                if (progreso <= 100) {
+                    pBar.style.width = progreso + "%";
+                } else {
+                    clearInterval(intervaloProgreso);
+                }
+            }, 60);
+
+            // Desplegar logs paulatinamente
+            eventos.forEach(ev => {
+                setTimeout(() => {
+                    const line = document.createElement('div');
+                    line.className = "log-line";
+                    line.innerText = ev.msj;
+                    log.appendChild(line);
+                    log.scrollTop = log.scrollHeight;
+                }, ev.tiempo);
+            });
+
+            // Procesar y renderizar los números al finalizar los 3 segundos de carga
+            setTimeout(() => {
+                // Fórmulas oficiales dominicanas
+                const onapi = 4745;
+                const honorariosAbogado = 27000;
+                const impuestoDgii = capital * 0.01;
+                
+                // Tasa de escala de Cámara de Comercio
+                let tasaCamara = 3500;
+                if (capital > 200000) tasaCamara = 5500;
+                if (capital > 500000) tasaCamara = 9000;
+
+                const inversionTotal = onapi + honorariosAbogado + impuestoDgii + tasaCamara;
+                const diasEstimados = 14 + Math.floor(Math.random() * 8); // Entre 14 y 22 días laborables
+                const capitalSocio = capital / socios;
+
+                // Render en el Dashboard
+                document.getElementById('out-dias').innerText = diasEstimados + " Días";
+                document.getElementById('out-dgii').innerText = "RD$ " + impuestoDgii.toLocaleString();
+                document.getElementById('out-camara').innerText = "RD$ " + tasaCamara.toLocaleString();
+                document.getElementById('out-acciones').innerText = "RD$ " + capitalSocio.toLocaleString();
+                document.getElementById('out-total').innerText = "RD$ " + inversionTotal.toLocaleString();
+            }, 3100);
+        }
+
+        // 3. DETECTOR DE SCROLL REVEAL (ANIMACIONES AL BAJAR)
+        window.addEventListener('scroll', () => {
+            document.querySelectorAll('.reveal').forEach(el => {
+                if (el.getBoundingClientRect().top < window.innerHeight - 150) el.classList.add('active');
+            });
+        });
+        // Forzar disparo inicial
+        window.onload = () => { window.dispatchEvent(new Event('scroll')); };
+    </script>
+</body>
+</html>
